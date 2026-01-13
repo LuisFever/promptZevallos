@@ -1,0 +1,77 @@
+<div class="p-6 bg-slate-50 min-h-screen">
+    <div class="bg-indigo-900 rounded-[3rem] p-10 text-white mb-8 relative overflow-hidden shadow-2xl shadow-indigo-200">
+        <div class="relative z-10 md:w-2/3">
+            <h1 class="text-4xl font-black mb-2 italic">Portal Comercial VillaZevallos</h1>
+            <p class="text-indigo-200 font-medium text-lg">Gestiona la oferta comercial, paquetes promocionales y servicios exclusivos del centro de convenciones.</p>
+            <div class="flex gap-4 mt-6">
+                <button class="bg-white text-indigo-900 px-6 py-2 rounded-xl font-black text-sm uppercase tracking-widest">Editar Catálogo</button>
+                <button class="border border-indigo-400 text-white px-6 py-2 rounded-xl font-bold text-sm">Ver Tarifario PDF</button>
+            </div>
+        </div>
+        <div class="absolute -right-20 -top-20 w-96 h-96 bg-indigo-500 rounded-full opacity-20 blur-3xl"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <div class="lg:col-span-2 space-y-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-black text-slate-800">Servicios y Espacios</h2>
+                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Actualizado hoy</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div *ngFor="let s of servicios" class="bg-white rounded-3xl p-6 border border-slate-100 shadow-xl shadow-slate-200/30 group hover:-translate-y-2 transition-all duration-300">
+                    <div class="text-5xl mb-4 group-hover:scale-110 transition-transform inline-block">{{s.imagen}}</div>
+                    <h3 class="text-xl font-black text-slate-800 mb-1">{{s.titulo}}</h3>
+                    <p class="text-slate-400 text-xs font-bold mb-4 uppercase tracking-tighter">Capacidad: {{s.capacidad}}</p>
+
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span *ngFor="let tag of s.tags" class="text-[9px] font-black bg-slate-100 text-slate-500 px-2 py-1 rounded-md uppercase">
+              {{tag}}
+            </span>
+                    </div>
+
+                    <div class="flex justify-between items-center border-t border-slate-50 pt-4">
+                        <span class="text-indigo-600 font-black text-lg">{{s.precio}}</span>
+                        <button class="text-slate-800 font-bold text-xs hover:text-indigo-600">Configurar →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-emerald-500 rounded-[2.5rem] p-8 text-white shadow-xl shadow-emerald-100">
+                <h3 class="font-black text-xs uppercase tracking-[0.2em] mb-4 opacity-80">Promoción Vigente</h3>
+                <p class="text-2xl font-bold leading-tight mb-4">Temporada de Bodas Mayo 2026</p>
+                <p class="text-xs mb-6 opacity-90 italic">15% de descuento en descorche para reservas de más de 200 personas.</p>
+                <div class="bg-white/20 p-4 rounded-2xl border border-white/30">
+                    <p class="text-[10px] font-black uppercase mb-1">Código de Cupón</p>
+                    <p class="text-xl font-mono font-bold tracking-widest">ZEVALLOS2026</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
+                <h3 class="font-black text-slate-800 text-sm uppercase mb-6 tracking-widest text-center">Interés del Público</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-[10px] font-black text-slate-400 mb-1 uppercase">
+                            <span>Bodas</span> <span>75%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full">
+                            <div class="bg-indigo-500 h-1.5 rounded-full w-[75%]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-[10px] font-black text-slate-400 mb-1 uppercase">
+                            <span>Corporativos</span> <span>40%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full">
+                            <div class="bg-slate-400 h-1.5 rounded-full w-[40%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
