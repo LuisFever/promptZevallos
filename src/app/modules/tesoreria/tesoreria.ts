@@ -1,14 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { StaffPaymentComponent } from './staff-payment.component';
 
 @Component({
   selector: 'app-tesoreria',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StaffPaymentComponent],
   templateUrl: './tesoreria.html',
   styles: []
 })
 export class Tesoreria {
+  showPaymentModal = false;
+
   // Datos simulados incluyendo personal
   movimientos = [
     { id: 1, concepto: 'Venta POS - Evento Corporativo', tipo: 'Ingreso', monto: 1250.00, categoria: 'Ventas', fecha: 'Hoy 10:30 AM', metodo: 'Efectivo' },
@@ -19,4 +22,10 @@ export class Tesoreria {
   ];
 
   saldoCaja = 4130.00;
+
+  addTransaction(t: any) {
+    this.movimientos.unshift(t);
+    this.saldoCaja -= t.monto; // Asumimos egreso por ahora
+    this.showPaymentModal = false;
+  }
 }

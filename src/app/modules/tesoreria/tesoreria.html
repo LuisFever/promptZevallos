@@ -1,94 +1,124 @@
 <div class="p-6 bg-slate-50 min-h-screen">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <div>
-            <h1 class="text-3xl font-black text-slate-900 tracking-tight italic">Flujo de Caja VillaZevallos</h1>
-            <p class="text-slate-500 font-medium">Control de Ingresos, Gastos y Planilla de Personal.</p>
-        </div>
-        <div class="flex gap-3">
-            <button class="bg-amber-100 text-amber-700 px-4 py-2 rounded-xl font-bold text-sm hover:bg-amber-200 transition">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-3xl font-black text-slate-900 tracking-tight italic">
+        Flujo de Caja VillaZevallos
+      </h1>
+      <p class="text-slate-500 font-medium">Control de Ingresos, Gastos y Planilla de Personal.</p>
+    </div>
+    <div class="flex gap-3">
+      <button
+        (click)="showPaymentModal = true"
+        class="bg-amber-100 text-amber-700 px-4 py-2 rounded-xl font-bold text-sm hover:bg-amber-200 transition"
+      >
         👥 Pago Personal
       </button>
-            <button class="bg-indigo-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-lg shadow-indigo-200">
+      <button
+        class="bg-indigo-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-lg shadow-indigo-200"
+      >
         📥 Arqueo Diario
       </button>
-        </div>
+    </div>
+  </div>
+
+  <app-staff-payment
+    *ngIf="showPaymentModal"
+    (cancel)="showPaymentModal = false"
+    (confirm)="addTransaction($event)"
+  >
+  </app-staff-payment>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-emerald-500">
+      <p class="text-slate-400 text-[10px] font-black uppercase mb-1">Caja Efectivo</p>
+      <p class="text-3xl font-black text-slate-900">S/ {{ saldoCaja | number : '1.2-2' }}</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-emerald-500">
-            <p class="text-slate-400 text-[10px] font-black uppercase mb-1">Caja Efectivo</p>
-            <p class="text-3xl font-black text-slate-900">S/ {{saldoCaja | number:'1.2-2'}}</p>
-        </div>
-
-        <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-rose-500">
-            <p class="text-slate-400 text-[10px] font-black uppercase mb-1">Gastos de Planilla</p>
-            <p class="text-3xl font-black text-rose-600">S/ 4,020.00</p>
-            <p class="text-[10px] text-slate-400 font-bold mt-1">Sueldos + Jornales Mozos</p>
-        </div>
-
-        <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-indigo-500">
-            <p class="text-slate-400 text-[10px] font-black uppercase mb-1">Otros Egresos</p>
-            <p class="text-3xl font-black text-slate-800">S/ 650.00</p>
-            <p class="text-[10px] text-slate-400 font-bold mt-1">Servicios y Proveedores</p>
-        </div>
-
-        <div class="bg-slate-900 p-6 rounded-[2rem] text-white">
-            <p class="text-indigo-300 text-[10px] font-black uppercase mb-1">Saldo Neto Mes</p>
-            <p class="text-3xl font-black">S/ 7,850.00</p>
-            <span class="text-[10px] bg-indigo-500 px-2 py-0.5 rounded-full font-bold">Post-Sueldos</span>
-        </div>
+    <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-rose-500">
+      <p class="text-slate-400 text-[10px] font-black uppercase mb-1">Gastos de Planilla</p>
+      <p class="text-3xl font-black text-rose-600">S/ 4,020.00</p>
+      <p class="text-[10px] text-slate-400 font-bold mt-1">Sueldos + Jornales Mozos</p>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
-        <div class="p-6 border-b border-slate-50 flex justify-between items-center">
-            <h3 class="font-black text-slate-800 text-sm uppercase tracking-widest">Kardex Financiero</h3>
-            <div class="flex gap-2">
-                <input type="text" placeholder="Filtrar por mozo o concepto..." class="text-xs border border-slate-200 rounded-lg px-4 py-2 w-64">
-            </div>
-        </div>
+    <div class="bg-white p-6 rounded-[2rem] shadow-sm border-b-4 border-indigo-500">
+      <p class="text-slate-400 text-[10px] font-black uppercase mb-1">Otros Egresos</p>
+      <p class="text-3xl font-black text-slate-800">S/ 650.00</p>
+      <p class="text-[10px] text-slate-400 font-bold mt-1">Servicios y Proveedores</p>
+    </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400">
-                    <tr>
-                        <th class="px-8 py-4">Concepto</th>
-                        <th class="px-8 py-4">Categoría</th>
-                        <th class="px-8 py-4 text-center">Forma de Pago</th>
-                        <th class="px-8 py-4 text-right">Monto</th>
-                        <th class="px-8 py-4">Estado</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-50">
-                    <tr *ngFor="let m of movimientos" class="hover:bg-slate-50/50 transition-all group">
-                        <td class="px-8 py-5">
-                            <p class="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">{{m.concepto}}</p>
-                            <p class="text-[10px] text-slate-400 font-medium tracking-tight italic">{{m.fecha}}</p>
-                        </td>
-                        <td class="px-8 py-5">
-                            <span [ngClass]="{
-                'bg-amber-100 text-amber-700': m.categoria.includes('Planilla'),
-                'bg-indigo-100 text-indigo-700': m.categoria.includes('Sueldos'),
-                'bg-slate-100 text-slate-500': m.categoria === 'Ventas'
-              }" class="px-3 py-1 rounded-full text-[9px] font-black uppercase">
-                {{m.categoria}}
+    <div class="bg-slate-900 p-6 rounded-[2rem] text-white">
+      <p class="text-indigo-300 text-[10px] font-black uppercase mb-1">Saldo Neto Mes</p>
+      <p class="text-3xl font-black">S/ 7,850.00</p>
+      <span class="text-[10px] bg-indigo-500 px-2 py-0.5 rounded-full font-bold">Post-Sueldos</span>
+    </div>
+  </div>
+
+  <div
+    class="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden"
+  >
+    <div class="p-6 border-b border-slate-50 flex justify-between items-center">
+      <h3 class="font-black text-slate-800 text-sm uppercase tracking-widest">Kardex Financiero</h3>
+      <div class="flex gap-2">
+        <input
+          type="text"
+          placeholder="Filtrar por mozo o concepto..."
+          class="text-xs border border-slate-200 rounded-lg px-4 py-2 w-64"
+        />
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400">
+          <tr>
+            <th class="px-8 py-4">Concepto</th>
+            <th class="px-8 py-4">Categoría</th>
+            <th class="px-8 py-4 text-center">Forma de Pago</th>
+            <th class="px-8 py-4 text-right">Monto</th>
+            <th class="px-8 py-4">Estado</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          <tr *ngFor="let m of movimientos" class="hover:bg-slate-50/50 transition-all group">
+            <td class="px-8 py-5">
+              <p class="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
+                {{ m.concepto }}
+              </p>
+              <p class="text-[10px] text-slate-400 font-medium tracking-tight italic">
+                {{ m.fecha }}
+              </p>
+            </td>
+            <td class="px-8 py-5">
+              <span
+                [ngClass]="{
+                  'bg-amber-100 text-amber-700': m.categoria.includes('Planilla'),
+                  'bg-indigo-100 text-indigo-700': m.categoria.includes('Sueldos'),
+                  'bg-slate-100 text-slate-500': m.categoria === 'Ventas'
+                }"
+                class="px-3 py-1 rounded-full text-[9px] font-black uppercase"
+              >
+                {{ m.categoria }}
               </span>
-                        </td>
-                        <td class="px-8 py-5 text-center">
-                            <div class="flex items-center justify-center gap-2">
-                                <span class="text-xs font-bold text-slate-600">{{m.metodo}}</span>
-                            </div>
-                        </td>
-                        <td class="px-8 py-5 text-right font-black" [ngClass]="m.tipo === 'Ingreso' ? 'text-emerald-600' : 'text-rose-500'">
-                            {{ m.tipo === 'Egreso' ? '-' : '+' }} S/ {{m.monto | number:'1.2-2'}}
-                        </td>
-                        <td class="px-8 py-5">
-                            <span class="flex items-center gap-1 text-[10px] font-bold text-emerald-500">
+            </td>
+            <td class="px-8 py-5 text-center">
+              <div class="flex items-center justify-center gap-2">
+                <span class="text-xs font-bold text-slate-600">{{ m.metodo }}</span>
+              </div>
+            </td>
+            <td
+              class="px-8 py-5 text-right font-black"
+              [ngClass]="m.tipo === 'Ingreso' ? 'text-emerald-600' : 'text-rose-500'"
+            >
+              {{ m.tipo === 'Egreso' ? '-' : '+' }} S/ {{ m.monto | number : '1.2-2' }}
+            </td>
+            <td class="px-8 py-5">
+              <span class="flex items-center gap-1 text-[10px] font-bold text-emerald-500">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Procesado
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>
