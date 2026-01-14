@@ -1,0 +1,85 @@
+<div class="max-w-7xl mx-auto px-6 py-12">
+  <div class="flex justify-between items-center mb-12">
+    <div>
+      <h1 class="text-3xl font-black text-slate-800">Hola, Cliente 👋</h1>
+      <p class="text-slate-500">Bienvenido a tu panel exclusivo de Villa Zevallos.</p>
+    </div>
+    <div
+      class="bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm flex items-center gap-2"
+    >
+      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+      <span class="text-xs font-bold text-slate-600">Cuenta Verificada</span>
+    </div>
+  </div>
+
+  <!-- Promociones -->
+  <section class="mb-12">
+    <h2
+      class="text-lg font-black text-slate-800 uppercase tracking-widest mb-6 flex items-center gap-2"
+    >
+      <span>🎁</span> Promociones para ti
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let promo of promociones"
+        class="rounded-3xl p-8 text-white relative overflow-hidden shadow-xl hover:-translate-y-1 transition duration-300"
+        [ngClass]="promo.color"
+      >
+        <div class="relative z-10">
+          <h3 class="text-2xl font-black mb-2">{{ promo.titulo }}</h3>
+          <p class="opacity-90 font-medium mb-6 text-sm">{{ promo.desc }}</p>
+          <button
+            class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-xs font-bold backdrop-blur-sm border border-white/30 transition"
+          >
+            Canjear ahora
+          </button>
+        </div>
+        <div
+          class="absolute -right-10 -bottom-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"
+        ></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mis Reservas -->
+  <section>
+    <h2
+      class="text-lg font-black text-slate-800 uppercase tracking-widest mb-6 flex items-center gap-2"
+    >
+      <span>📅</span> Historial de Eventos
+    </h2>
+    <div
+      class="bg-white rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden"
+    >
+      <table class="w-full text-left">
+        <thead class="bg-slate-50/50 border-b border-slate-100">
+          <tr class="text-xs text-slate-400 uppercase tracking-wider">
+            <th class="px-8 py-5 font-black">Evento</th>
+            <th class="px-8 py-5 font-black">Fecha</th>
+            <th class="px-8 py-5 font-black">Estado</th>
+            <th class="px-8 py-5 font-black text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          <tr *ngFor="let r of reservas" class="hover:bg-slate-50/50 transition">
+            <td class="px-8 py-6 font-bold text-slate-700">{{ r.evento }}</td>
+            <td class="px-8 py-6 text-slate-500 font-medium text-sm">{{ r.fecha }}</td>
+            <td class="px-8 py-6">
+              <span
+                class="px-3 py-1 rounded-full bg-slate-100 text-[10px] font-black uppercase tracking-wide"
+                [ngClass]="r.statusColor"
+              >
+                {{ r.estado }}
+              </span>
+            </td>
+            <td class="px-8 py-6 text-right">
+              <button class="text-indigo-600 font-bold text-xs hover:underline">
+                Ver detalles
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

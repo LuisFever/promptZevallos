@@ -1,56 +1,102 @@
 <div class="flex h-screen bg-gray-100 font-sans">
-    <aside class="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col">
-        <div class="p-6 text-xl font-bold border-b border-slate-800 flex items-center gap-2">
-            <span class="text-blue-400">🏢</span> Convenciones ERP
-        </div>
-
-        <nav class="flex-1 overflow-y-auto p-4 space-y-2">
-            <p class="text-xs text-slate-500 uppercase font-semibold px-2">Principal</p>
-            <a routerLink="/admin" class="flex items-center p-2 rounded hover:bg-slate-800 transition shadow-sm">
-                <span class="mr-3 text-lg">🛡️</span> Admin & Accesos
-            </a>
-            <a routerLink="/comercial" class="flex items-center p-2 rounded hover:bg-slate-800 transition">
-                <span class="mr-3 text-lg">📢</span> Portal Comercial
-            </a>
-            <a routerLink="/reservas" class="flex items-center p-2 rounded hover:bg-slate-800 transition">
-                <span class="mr-3 text-lg">📅</span> Reservas y Eventos
-            </a>
-
-            <p class="text-xs text-slate-500 uppercase font-semibold px-2 pt-4">Operaciones</p>
-            <a routerLink="/pos" class="flex items-center p-2 rounded hover:bg-slate-800 transition">
-                <span class="mr-3 text-lg">🛒</span> Punto de Venta
-            </a>
-            <a routerLink="/inventario" class="flex items-center p-2 rounded hover:bg-slate-800 transition">
-                <span class="mr-3 text-lg">📦</span> Inventario
-            </a>
-
-            <p class="text-xs text-slate-500 uppercase font-semibold px-2 pt-4">Finanzas</p>
-            <a routerLink="/tesoreria" class="flex items-center p-2 rounded hover:bg-slate-800 transition">
-                <span class="mr-3 text-lg">💰</span> Tesorería
-            </a>
-            <a routerLink="/contabilidad" class="flex items-center p-2 rounded hover:bg-slate-800 transition border-l-4 border-blue-500 bg-slate-800">
-                <span class="mr-3 text-lg">📈</span> Contabilidad
-            </a>
-        </nav>
-    </aside>
-
-    <!--Cabecera y contenido principal-->
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm">
-            <h2 class="text-lg font-medium text-gray-700">Panel de Control</h2>
-            <div class="flex items-center gap-4">
-                <div class="text-right">
-                    <p class="text-sm font-bold text-gray-800 leading-none">Admin Usuario</p>
-                    <span class="text-xs text-green-500">En línea</span>
-                </div>
-                <img class="w-10 h-10 rounded-full border-2 border-blue-100" src="https://ui-avatars.com/api/?name=Admin" alt="avatar">
-            </div>
-        </header>
-
-        <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 bg-gray-50">
-            <router-outlet></router-outlet>
-        </main>
+  <aside class="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col">
+    <div class="p-6 text-xl font-bold border-b border-slate-800 flex items-center gap-2">
+      <span class="text-blue-400">🏢</span> Convenciones ERP
     </div>
 
+    <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+      <p
+        *ngIf="canAccess('ADMIN') || canAccess('COMERCIAL') || canAccess('RESERVAS')"
+        class="text-xs text-slate-500 uppercase font-semibold px-2"
+      >
+        Principal
+      </p>
 
+      <a
+        *ngIf="canAccess('ADMIN')"
+        routerLink="/admin"
+        class="flex items-center p-2 rounded hover:bg-slate-800 transition shadow-sm"
+      >
+        <span class="mr-3 text-lg">🛡️</span> Admin & Accesos
+      </a>
+      <a
+        *ngIf="canAccess('COMERCIAL')"
+        routerLink="/comercial"
+        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+      >
+        <span class="mr-3 text-lg">📢</span> Portal Comercial
+      </a>
+      <a
+        *ngIf="canAccess('RESERVAS')"
+        routerLink="/reservas"
+        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+      >
+        <span class="mr-3 text-lg">📅</span> Reservas y Eventos
+      </a>
+
+      <p
+        *ngIf="canAccess('POS') || canAccess('INVENTARIO')"
+        class="text-xs text-slate-500 uppercase font-semibold px-2 pt-4"
+      >
+        Operaciones
+      </p>
+      <a
+        *ngIf="canAccess('POS')"
+        routerLink="/pos"
+        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+      >
+        <span class="mr-3 text-lg">🛒</span> Punto de Venta
+      </a>
+      <a
+        *ngIf="canAccess('INVENTARIO')"
+        routerLink="/inventario"
+        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+      >
+        <span class="mr-3 text-lg">📦</span> Inventario
+      </a>
+
+      <p
+        *ngIf="canAccess('TESORERIA') || canAccess('CONTABILIDAD')"
+        class="text-xs text-slate-500 uppercase font-semibold px-2 pt-4"
+      >
+        Finanzas
+      </p>
+      <a
+        *ngIf="canAccess('TESORERIA')"
+        routerLink="/tesoreria"
+        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+      >
+        <span class="mr-3 text-lg">💰</span> Tesorería
+      </a>
+      <a
+        *ngIf="canAccess('CONTABILIDAD')"
+        routerLink="/contabilidad"
+        class="flex items-center p-2 rounded hover:bg-slate-800 transition border-l-4 border-blue-500 bg-slate-800"
+      >
+        <span class="mr-3 text-lg">📈</span> Contabilidad
+      </a>
+    </nav>
+  </aside>
+
+  <!--Cabecera y contenido principal-->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm">
+      <h2 class="text-lg font-medium text-gray-700">Panel de Control</h2>
+      <div class="flex items-center gap-4">
+        <div class="text-right">
+          <p class="text-sm font-bold text-gray-800 leading-none">{{ userEmail }}</p>
+          <span class="text-xs text-indigo-500 font-bold uppercase">{{ userRole }}</span>
+        </div>
+        <img
+          class="w-10 h-10 rounded-full border-2 border-blue-100"
+          [src]="'https://ui-avatars.com/api/?name=' + userRole + '&background=random'"
+          alt="avatar"
+        />
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 bg-gray-50">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>

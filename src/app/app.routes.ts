@@ -10,8 +10,17 @@ export const routes: Routes = [
     path: '',
     component: PublicLayoutComponent,
     children: [
-      { path: '', component: LandingComponent }
+      { path: '', component: LandingComponent },
+      {
+        path: 'reservar',
+        loadComponent: () => import('./modules/public/booking/booking.component').then(m => m.BookingComponent)
+      },
+      {
+        path: 'cliente/dashboard',
+        loadComponent: () => import('./modules/client/dashboard/client-dashboard.component').then(m => m.ClientDashboardComponent)
+      }
     ]
+
   },
 
   // RUTA DE AUTENTICACIÓN (Login) - Fuera de ambos layouts

@@ -1,10 +1,37 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink], // Importante para que funcione el menú
+  imports: [RouterOutlet, RouterLink, CommonModule], // Importante para que funcione el menú
   templateUrl: './layout.html'
 })
-export class LayoutComponent {}
+export class LayoutComponent {
+  userEmail: string = '';
+  userRole: string = '';
+
+  constructor() {
+    // Leer sesión (simulado)
+    if (typeof localStorage !== 'undefined') {
+      this.userEmail = localStorage.getItem('userEmail') || 'Usuario';
+      this.userRole = localStorage.getItem('userRole') || 'ADMINISTRADOR';
+    }
+  }
+
+  canAccess(module: string): boolean {
+    if (this.userRole === 'ADMINISTRADOR') return true;
+
+    switch (module) {
+      case 'ADMIN': return this.userRole === 'ADMINISTRADOR' || this.userRole === 'SEGURIDAD';
+      case 'COMERCIAL': return this.userRole === 'VENTAS';
+      case 'RESERVAS': return this.userRole === 'VENTAS';
+      case 'POS': return this.userRole === 'VENTAS' || this.userRole === 'FINANZAS';
+      case 'INVENTARIO': return this.userRole === 'LOGISTICA';
+      case 'TESORERIA': return this.userRole === 'FINANZAS';
+      case 'CONTABILIDAD': return this.userRole === 'FINANZAS';
+      default: return false;
+    }
+  }
+}

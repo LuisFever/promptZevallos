@@ -1,0 +1,146 @@
+<div class="max-w-4xl mx-auto px-6 py-12">
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-black text-slate-800 mb-4">Reserva tu Experiencia</h1>
+    <p class="text-slate-500">
+      Completa los pasos para cotizar y solicitar la disponibilidad de nuestros espacios.
+    </p>
+  </div>
+
+  <!-- Stepper -->
+  <div class="flex justify-between items-center mb-12 relative max-w-2xl mx-auto">
+    <div class="absolute inset-0 top-1/2 h-0.5 bg-slate-200 -z-10"></div>
+    <div
+      *ngFor="let step of steps; let i = index"
+      class="flex flex-col items-center bg-slate-50 px-2"
+    >
+      <div
+        class="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm transition-all duration-300 border-2"
+        [ngClass]="
+          currentStep > i
+            ? 'bg-indigo-600 border-indigo-600 text-white'
+            : currentStep === i + 1
+            ? 'border-indigo-600 text-indigo-600 bg-white'
+            : 'border-slate-300 text-slate-300 bg-white'
+        "
+      >
+        {{ i + 1 }}
+      </div>
+      <span
+        class="text-xs font-bold mt-2 uppercase tracking-wide"
+        [ngClass]="currentStep >= i + 1 ? 'text-indigo-900' : 'text-slate-300'"
+        >{{ step }}</span
+      >
+    </div>
+  </div>
+
+  <div
+    class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 p-8 md:p-12"
+  >
+    <!-- Paso 1: Calendario -->
+    <div *ngIf="currentStep === 1" class="animate-fadeIn">
+      <h3 class="text-2xl font-black text-slate-800 mb-6">Selecciona una fecha tentativa</h3>
+      <div class="grid grid-cols-7 gap-2 text-center text-sm mb-6">
+        <div
+          *ngFor="let dia of ['L', 'M', 'M', 'J', 'V', 'S', 'D']"
+          class="font-bold text-slate-400"
+        >
+          {{ dia }}
+        </div>
+        <div
+          *ngFor="let d of dates"
+          class="aspect-square flex items-center justify-center rounded-xl cursor-pointer hover:bg-slate-100 transition font-medium text-slate-600 hover:text-indigo-600 hover:font-black"
+          [class.bg-indigo-600]="d === 24"
+          [class.text-white]="d === 24"
+        >
+          {{ d }}
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <button
+          (click)="currentStep = 2"
+          class="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200"
+        >
+          Continuar →
+        </button>
+      </div>
+    </div>
+
+    <!-- Paso 2: Tipo de Evento -->
+    <div *ngIf="currentStep === 2" class="animate-fadeIn">
+      <h3 class="text-2xl font-black text-slate-800 mb-6">¿Qué tipo de evento organizas?</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div
+          class="p-6 border-2 border-slate-100 rounded-2xl hover:border-indigo-500 cursor-pointer transition group"
+        >
+          <span class="text-4xl mb-2 block group-hover:scale-110 transition-transform">💍</span>
+          <h4 class="font-bold text-slate-800">Social / Boda</h4>
+          <p class="text-xs text-slate-400">Fiestas, matrimonios, cumpleaños</p>
+        </div>
+        <div
+          class="p-6 border-2 border-slate-100 rounded-2xl hover:border-indigo-500 cursor-pointer transition group"
+        >
+          <span class="text-4xl mb-2 block group-hover:scale-110 transition-transform">👔</span>
+          <h4 class="font-bold text-slate-800">Corporativo</h4>
+          <p class="text-xs text-slate-400">Conferencias, talleres, reuniones</p>
+        </div>
+      </div>
+      <div class="flex justify-between">
+        <button (click)="currentStep = 1" class="text-slate-400 font-bold hover:text-slate-600">
+          ← Volver
+        </button>
+        <button
+          (click)="currentStep = 3"
+          class="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200"
+        >
+          Continuar →
+        </button>
+      </div>
+    </div>
+
+    <!-- Paso 3: Datos -->
+    <div *ngIf="currentStep === 3" class="animate-fadeIn">
+      <h3 class="text-2xl font-black text-slate-800 mb-6">Tus datos de contacto</h3>
+      <div class="space-y-4 mb-8">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre</label>
+            <input
+              type="text"
+              class="w-full p-3 bg-slate-50 rounded-xl border-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Apellido</label>
+            <input
+              type="text"
+              class="w-full p-3 bg-slate-50 rounded-xl border-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email</label>
+          <input
+            type="email"
+            class="w-full p-3 bg-slate-50 rounded-xl border-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Comentarios</label>
+          <textarea
+            class="w-full p-3 bg-slate-50 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 h-24"
+          ></textarea>
+        </div>
+      </div>
+      <div class="flex justify-between items-center">
+        <button (click)="currentStep = 2" class="text-slate-400 font-bold hover:text-slate-600">
+          ← Volver
+        </button>
+        <button
+          class="bg-emerald-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-600 transition shadow-lg shadow-emerald-200 w-full md:w-auto ml-4"
+        >
+          Enviar Solicitud
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
