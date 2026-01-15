@@ -51,6 +51,8 @@ export class DataService {
     }
 
     private initData() {
+        if (typeof localStorage === 'undefined') return;
+
         // 1. Load USERS
         const storedUsers = localStorage.getItem('mock_users');
         if (storedUsers) {
@@ -108,7 +110,7 @@ export class DataService {
         this.saveUsers(updated);
     }
 
-    private saveUsers(data: User[]) { localStorage.setItem('mock_users', JSON.stringify(data)); }
+    private saveUsers(data: User[]) { if (typeof localStorage !== 'undefined') localStorage.setItem('mock_users', JSON.stringify(data)); }
 
     // Products
     updateStock(productId: number, quantitySold: number) {
@@ -121,7 +123,7 @@ export class DataService {
         this.saveProducts(updated);
     }
 
-    private saveProducts(data: Product[]) { localStorage.setItem('mock_products', JSON.stringify(data)); }
+    private saveProducts(data: Product[]) { if (typeof localStorage !== 'undefined') localStorage.setItem('mock_products', JSON.stringify(data)); }
 
     // Transactions (Treasury)
     addTransaction(t: Transaction) {
@@ -131,5 +133,5 @@ export class DataService {
         this.saveTransactions(updated);
     }
 
-    private saveTransactions(data: Transaction[]) { localStorage.setItem('mock_transactions', JSON.stringify(data)); }
+    private saveTransactions(data: Transaction[]) { if (typeof localStorage !== 'undefined') localStorage.setItem('mock_transactions', JSON.stringify(data)); }
 }

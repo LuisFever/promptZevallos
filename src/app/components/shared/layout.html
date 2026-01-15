@@ -15,21 +15,24 @@
       <a
         *ngIf="canAccess('ADMIN')"
         routerLink="/admin"
-        class="flex items-center p-2 rounded hover:bg-slate-800 transition shadow-sm"
+        routerLinkActive="bg-slate-800 !border-blue-500"
+        class="flex items-center p-3 rounded-r-xl hover:bg-slate-800 transition border-l-4 border-transparent mr-2"
       >
         <span class="mr-3 text-lg">🛡️</span> Admin & Accesos
       </a>
       <a
         *ngIf="canAccess('COMERCIAL')"
         routerLink="/comercial"
-        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+        routerLinkActive="bg-slate-800 !border-blue-500"
+        class="flex items-center p-3 rounded-r-xl hover:bg-slate-800 transition border-l-4 border-transparent mr-2"
       >
         <span class="mr-3 text-lg">📢</span> Portal Comercial
       </a>
       <a
         *ngIf="canAccess('RESERVAS')"
         routerLink="/reservas"
-        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+        routerLinkActive="bg-slate-800 !border-blue-500"
+        class="flex items-center p-3 rounded-r-xl hover:bg-slate-800 transition border-l-4 border-transparent mr-2"
       >
         <span class="mr-3 text-lg">📅</span> Reservas y Eventos
       </a>
@@ -43,14 +46,16 @@
       <a
         *ngIf="canAccess('POS')"
         routerLink="/pos"
-        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+        routerLinkActive="bg-slate-800 !border-blue-500"
+        class="flex items-center p-3 rounded-r-xl hover:bg-slate-800 transition border-l-4 border-transparent mr-2"
       >
         <span class="mr-3 text-lg">🛒</span> Punto de Venta
       </a>
       <a
         *ngIf="canAccess('INVENTARIO')"
         routerLink="/inventario"
-        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+        routerLinkActive="bg-slate-800 !border-blue-500"
+        class="flex items-center p-3 rounded-r-xl hover:bg-slate-800 transition border-l-4 border-transparent mr-2"
       >
         <span class="mr-3 text-lg">📦</span> Inventario
       </a>
@@ -64,14 +69,16 @@
       <a
         *ngIf="canAccess('TESORERIA')"
         routerLink="/tesoreria"
-        class="flex items-center p-2 rounded hover:bg-slate-800 transition"
+        routerLinkActive="bg-slate-800 !border-blue-500"
+        class="flex items-center p-3 rounded-r-xl hover:bg-slate-800 transition border-l-4 border-transparent mr-2"
       >
         <span class="mr-3 text-lg">💰</span> Tesorería
       </a>
       <a
         *ngIf="canAccess('CONTABILIDAD')"
         routerLink="/contabilidad"
-        class="flex items-center p-2 rounded hover:bg-slate-800 transition border-l-4 border-blue-500 bg-slate-800"
+        routerLinkActive="bg-slate-800 !border-blue-500"
+        class="flex items-center p-3 rounded-r-xl hover:bg-slate-800 transition border-l-4 border-transparent mr-2"
       >
         <span class="mr-3 text-lg">📈</span> Contabilidad
       </a>

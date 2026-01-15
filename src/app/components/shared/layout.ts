@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule], // Importante para que funcione el menú
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule], // Importante para que funcione el menú
   templateUrl: './layout.html'
 })
 export class LayoutComponent {
