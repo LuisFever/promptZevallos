@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaffPaymentComponent } from './staff-payment.component';
+import { DataService, Transaction } from '../../services/data.service';
 
 @Component({
   selector: 'app-tesoreria',
@@ -9,23 +10,47 @@ import { StaffPaymentComponent } from './staff-payment.component';
   templateUrl: './tesoreria.html',
   styles: []
 })
-export class Tesoreria {
+export class Tesoreria implements OnInit {
   showPaymentModal = false;
+  movimientos: Transaction[] = [];
 
-  // Datos simulados incluyendo personal
-  movimientos = [
-    { id: 1, concepto: 'Venta POS - Evento Corporativo', tipo: 'Ingreso', monto: 1250.00, categoria: 'Ventas', fecha: 'Hoy 10:30 AM', metodo: 'Efectivo' },
-    { id: 2, concepto: 'Pago 04 Mozos - Boda Flores', tipo: 'Egreso', monto: 320.00, categoria: 'Planilla Eventos', fecha: 'Hoy 09:15 AM', metodo: 'Efectivo' },
-    { id: 3, concepto: 'Sueldo Mensual - Administrador', tipo: 'Egreso', monto: 2500.00, categoria: 'Sueldos Fijos', fecha: '10 Ene 2026', metodo: 'Transferencia' },
-    { id: 4, concepto: 'Reserva Boda Fam. Ruiz', tipo: 'Ingreso', monto: 5000.00, categoria: 'Reservas', fecha: 'Ayer', metodo: 'Banco' },
-    { id: 5, concepto: 'Pago Personal Limpieza (Mensual)', tipo: 'Egreso', monto: 1200.00, categoria: 'Sueldos Fijos', fecha: '05 Ene 2026', metodo: 'Transferencia' }
-  ];
+  constructor(private dataService: DataService) { }
 
-  saldoCaja = 4130.00;
+  ngOnInit() {
+    this.dataService.transactions$.subscribe(data => {
+      this.movimientos = data;
+    });
+  }
+
+  get saldoCaja(): number {
+    // Simple calculation: Ingreso - Egreso
+    return this.movimientos.reduce((acc, curr) => {
+      return curr.type === 'Ingreso' ? acc + curr.amount : acc - curr.amount;
+    }, 0);
+  }
 
   addTransaction(t: any) {
-    this.movimientos.unshift(t);
-    this.saldoCaja -= t.monto; // Asumimos egreso por ahora
+    // The modal emits a partial object, we need to ensure it fits Transaction interface
+    // But DataService expects a Transaction.
+    // Ideally StaffPaymentComponent should emit a compatible object or we construct it here.
+    // Assuming staff-payment emits a simplified object, let's adapt it or pass it if compatible.
+
+    // In staff-payment.ts:
+    // confirm.emit({ concepto: ..., categoria: ..., metodo: ..., monto: ..., tipo: 'Egreso', fecha: ..., estado: ... });
+    // It matches the structure mostly but ID is missing.
+
+    const newTransaction: Transaction = {
+      id: Date.now(),
+      concept: t.concepto,
+      type: t.tipo,
+      amount: t.monto,
+      category: t.categoria,
+      date: t.fecha,
+      method: t.metodo,
+      status: t.estado
+    };
+
+    this.dataService.addTransaction(newTransaction);
     this.showPaymentModal = false;
   }
 }

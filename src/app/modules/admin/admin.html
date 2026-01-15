@@ -5,10 +5,70 @@
       <p class="text-slate-500">VillaZevallos • Gestión centralizada de seguridad y trazabilidad</p>
     </div>
     <button
+      (click)="openModal()"
       class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-2 font-semibold"
     >
       <span>➕</span> Nuevo Usuario
     </button>
+  </div>
+
+  <!-- MODAL NUEVO USUARIO -->
+  <div
+    *ngIf="showModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn"
+  >
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6">
+      <h3 class="text-xl font-bold text-slate-800 mb-4">Registrar Nuevo Usuario</h3>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1"
+            >Nombre Completo</label
+          >
+          <input
+            type="text"
+            [(ngModel)]="newUser.name"
+            class="w-full border border-slate-200 rounded-lg p-3 outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1"
+            >Correo Electrónico</label
+          >
+          <input
+            type="email"
+            [(ngModel)]="newUser.email"
+            class="w-full border border-slate-200 rounded-lg p-3 outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Rol / Perfil</label>
+          <select
+            [(ngModel)]="newUser.role"
+            class="w-full border border-slate-200 rounded-lg p-3 outline-none focus:border-indigo-500"
+          >
+            <option value="Administrador">Administrador</option>
+            <option value="Ventas">Ventas</option>
+            <option value="Finanzas">Finanzas</option>
+            <option value="Logística">Logística</option>
+            <option value="Seguridad">Seguridad</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-6">
+        <button
+          (click)="closeModal()"
+          class="px-4 py-2 text-slate-500 font-bold hover:bg-slate-50 rounded-lg"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="saveUser()"
+          class="px-4 py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 shadow-lg shadow-indigo-200"
+        >
+          Guardar Usuario
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -46,7 +106,7 @@
                       : 'bg-slate-100 text-slate-500'
                   "
                 >
-                  {{ user.initials }}
+                  {{ getInitials(user.name) }}
                 </div>
                 <div>
                   <p class="font-bold text-slate-800">{{ user.name }}</p>
