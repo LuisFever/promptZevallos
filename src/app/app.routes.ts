@@ -3,6 +3,7 @@ import { LoginComponent } from './auth/login/login';
 import { LayoutComponent } from './components/shared/layout';
 import { PublicLayoutComponent } from './components/shared/public-layout/public-layout.component';
 import { LandingComponent } from './modules/public/landing/landing.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   // RUTA PÚBLICA (Landing Page)
@@ -30,6 +31,7 @@ export const routes: Routes = [
   {
     path: '', // Esto permite que /admin cargue bajo el layout privado
     component: LayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: 'admin',

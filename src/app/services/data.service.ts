@@ -31,6 +31,25 @@ export interface Transaction {
     status: string;
 }
 
+export interface Booking {
+    id: number;
+    clientName: string;
+    eventName: string;
+    date: number; // Day of month (simplified for demo)
+    time: string;
+    status: 'Confirmado' | 'Pendiente' | 'En Curso';
+    total: number;
+}
+
+export interface Service {
+    id: number;
+    titulo: string;
+    capacidad: string;
+    precio: number;
+    imagen: string;
+    tags: string[];
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -45,6 +64,12 @@ export class DataService {
 
     private transactionsSubject = new BehaviorSubject<Transaction[]>([]);
     transactions$ = this.transactionsSubject.asObservable();
+
+    private bookingsSubject = new BehaviorSubject<Booking[]>([]);
+    bookings$ = this.bookingsSubject.asObservable();
+
+    private servicesSubject = new BehaviorSubject<Service[]>([]);
+    services$ = this.servicesSubject.asObservable();
 
     constructor() {
         this.initData();
@@ -98,9 +123,62 @@ export class DataService {
             this.transactionsSubject.next(defaults);
             this.saveTransactions(defaults);
         }
+
+        // 4. Load BOOKINGS
+        const storedBookings = localStorage.getItem('mock_bookings');
+        if (storedBookings) {
+            this.bookingsSubject.next(JSON.parse(storedBookings));
+        } else {
+            const defaults: Booking[] = [
+                { id: 1, clientName: 'Tech Corp', eventName: 'Conferencia Tech', date: 5, time: '09:00 AM', status: 'Confirmado', total: 12000 },
+                { id: 2, clientName: 'Familia Flores', eventName: 'Boda Flores', date: 13, time: '14:00 PM', status: 'Pendiente', total: 8500 },
+                { id: 3, clientName: 'Empresa X', eventName: 'Aniversario', date: 15, time: '19:00 PM', status: 'En Curso', total: 5000 }
+            ];
+            this.bookingsSubject.next(defaults);
+            this.saveBookings(defaults);
+        }
+
+        // 5. Load SERVICES
+        const storedServices = localStorage.getItem('mock_services');
+        if (storedServices) {
+            this.servicesSubject.next(JSON.parse(storedServices));
+        } else {
+            const defaults: Service[] = [
+                { id: 1, titulo: 'Salón Imperial', capacidad: '500 personas', precio: 3500, imagen: '🏛️', tags: ['Aire Acondicionado', 'Sonido Pro'] },
+                { id: 2, titulo: 'Jardín de Recepciones', capacidad: '300 personas', precio: 2800, imagen: '🌳', tags: ['Outdoor', 'Iluminación LED'] },
+                { id: 3, titulo: 'Paquete Boda Todo Incluido', capacidad: 'Personalizado', precio: 8000, imagen: '💍', tags: ['Catering', 'Decoración', 'DJ'] }
+            ];
+            this.servicesSubject.next(defaults);
+            this.saveServices(defaults);
+        }
     }
 
     // --- ACTIONS ---
+
+    // Bookings
+    addBooking(b: Booking) {
+        const current = this.bookingsSubject.getValue();
+        const updated = [...current, b];
+        this.bookingsSubject.next(updated);
+        this.saveBookings(updated);
+    }
+
+    updateBooking(b: Booking) {
+        const current = this.bookingsSubject.getValue();
+        const updated = current.map(item => item.id === b.id ? b : item);
+        this.bookingsSubject.next(updated);
+        this.saveBookings(updated);
+    }
+    private saveBookings(data: Booking[]) { if (typeof localStorage !== 'undefined') localStorage.setItem('mock_bookings', JSON.stringify(data)); }
+
+    // Services
+    updateService(s: Service) {
+        const current = this.servicesSubject.getValue();
+        const updated = current.map(item => item.id === s.id ? s : item);
+        this.servicesSubject.next(updated);
+        this.saveServices(updated);
+    }
+    private saveServices(data: Service[]) { if (typeof localStorage !== 'undefined') localStorage.setItem('mock_services', JSON.stringify(data)); }
 
     // Users
     addUser(user: User) {
@@ -111,6 +189,25 @@ export class DataService {
     }
 
     private saveUsers(data: User[]) { if (typeof localStorage !== 'undefined') localStorage.setItem('mock_users', JSON.stringify(data)); }
+
+    updateUser(user: User) {
+        const current = this.usersSubject.getValue();
+        const updated = current.map(u => u.id === user.id ? user : u);
+        this.usersSubject.next(updated);
+        this.saveUsers(updated);
+    }
+
+    toggleUserStatus(userId: number) {
+        const current = this.usersSubject.getValue();
+        const updated = current.map(u => {
+            if (u.id === userId) {
+                return { ...u, status: u.status === 'Activo' ? 'Inactivo' : 'Activo' } as User;
+            }
+            return u;
+        });
+        this.usersSubject.next(updated);
+        this.saveUsers(updated);
+    }
 
     // Products
     updateStock(productId: number, quantitySold: number) {
@@ -124,6 +221,27 @@ export class DataService {
     }
 
     private saveProducts(data: Product[]) { if (typeof localStorage !== 'undefined') localStorage.setItem('mock_products', JSON.stringify(data)); }
+
+    addProduct(product: Product) {
+        const current = this.productsSubject.getValue();
+        const updated = [...current, product];
+        this.productsSubject.next(updated);
+        this.saveProducts(updated);
+    }
+
+    updateProduct(product: Product) {
+        const current = this.productsSubject.getValue();
+        const updated = current.map(p => p.id === product.id ? product : p);
+        this.productsSubject.next(updated);
+        this.saveProducts(updated);
+    }
+
+    deleteProduct(productId: number) {
+        const current = this.productsSubject.getValue();
+        const updated = current.filter(p => p.id !== productId);
+        this.productsSubject.next(updated);
+        this.saveProducts(updated);
+    }
 
     // Transactions (Treasury)
     addTransaction(t: Transaction) {

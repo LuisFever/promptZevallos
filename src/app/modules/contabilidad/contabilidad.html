@@ -14,7 +14,8 @@
         <option *ngFor="let ev of eventos" [value]="ev.id">{{ ev.nombre }}</option>
       </select>
       <button
-        class="bg-slate-900 text-white px-6 py-2 rounded-xl font-bold text-xs shadow-lg flex items-center gap-2"
+        (click)="downloadReport()"
+        class="bg-slate-900 text-white px-6 py-2 rounded-xl font-bold text-xs shadow-lg flex items-center gap-2 hover:bg-slate-800 transition"
       >
         <span>📊</span> Descargar Balance
       </button>
@@ -101,7 +102,7 @@
         <div *ngFor="let s of topServicios" class="flex items-center justify-between">
           <div>
             <p class="text-sm font-bold text-slate-700">{{ s.nombre }}</p>
-            <p class="text-[10px] text-slate-400 font-bold uppercase">{{ s.ventas }} Contratos</p>
+            <p class="text-[10px] text-slate-400 font-bold uppercase">S/ {{ s.total }} Ingresos</p>
           </div>
           <span
             [class]="

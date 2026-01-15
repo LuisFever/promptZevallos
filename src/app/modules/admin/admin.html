@@ -134,8 +134,18 @@
                 </span>
               </td>
               <td class="px-6 py-4">
-                <button class="text-slate-400 hover:text-indigo-600 font-bold mr-3">Editar</button>
-                <button class="text-slate-400 hover:text-red-500 font-bold">Log</button>
+                <button
+                  (click)="editUser(user)"
+                  class="text-slate-400 hover:text-indigo-600 font-bold mr-3"
+                >
+                  Editar
+                </button>
+                <button
+                  (click)="toggleStatus(user)"
+                  class="text-slate-400 hover:text-red-500 font-bold transition"
+                >
+                  {{ user.status === 'Activo' ? 'Desactivar' : 'Activar' }}
+                </button>
               </td>
             </tr>
           </tbody>

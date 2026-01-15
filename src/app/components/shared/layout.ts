@@ -20,6 +20,15 @@ export class LayoutComponent {
     }
   }
 
+  logout() {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userEmail');
+    }
+    // Redirigir usando window.location para forzar recarga y limpiar estado en memoria
+    window.location.href = '/login';
+  }
+
   canAccess(module: string): boolean {
     if (this.userRole === 'ADMINISTRADOR') return true;
 

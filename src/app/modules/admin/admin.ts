@@ -41,17 +41,38 @@ export class AdminComponent implements OnInit {
       'Seguridad': 'bg-slate-100 text-slate-700'
     };
 
-    const u: User = {
-      id: Date.now(),
-      name: this.newUser.name,
-      email: this.newUser.email,
-      role: this.newUser.role,
-      roleColor: roleColors[this.newUser.role] || 'bg-gray-100',
-      status: 'Activo'
-    };
+    if (this.newUser.id) {
+      // EDIT MODE
+      const u: User = {
+        ...this.newUser,
+        roleColor: roleColors[this.newUser.role] || 'bg-gray-100'
+      };
+      this.dataService.updateUser(u);
+    } else {
+      // CREATE MODE
+      const u: User = {
+        id: Date.now(),
+        name: this.newUser.name,
+        email: this.newUser.email,
+        role: this.newUser.role,
+        roleColor: roleColors[this.newUser.role] || 'bg-gray-100',
+        status: 'Activo'
+      };
+      this.dataService.addUser(u);
+    }
 
-    this.dataService.addUser(u);
     this.closeModal();
     this.newUser = { name: '', email: '', role: 'Ventas' }; // Reset
+  }
+
+  editUser(user: User) {
+    this.newUser = { ...user }; // Clone to avoid direct reference edit
+    this.showModal = true;
+  }
+
+  toggleStatus(user: User) {
+    if (confirm(`¿Cambiar estado de ${user.name} a ${user.status === 'Activo' ? 'Inactivo' : 'Activo'}?`)) {
+      this.dataService.toggleUserStatus(user.id);
+    }
   }
 }

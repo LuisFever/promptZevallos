@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaffPaymentComponent } from './staff-payment.component';
 import { DataService, Transaction } from '../../services/data.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-tesoreria',
   standalone: true,
-  imports: [CommonModule, StaffPaymentComponent],
+  imports: [CommonModule, StaffPaymentComponent, FormsModule],
   templateUrl: './tesoreria.html',
   styles: []
 })
@@ -52,5 +53,28 @@ export class Tesoreria implements OnInit {
 
     this.dataService.addTransaction(newTransaction);
     this.showPaymentModal = false;
+  }
+
+  // General Transaction Modal
+  showTxModal = false;
+  newTx: any = { concept: '', amount: 0, type: 'Egreso', category: 'General' };
+
+  openTxModal() { this.showTxModal = true; }
+  closeTxModal() { this.showTxModal = false; }
+
+  saveTx() {
+    const t: Transaction = {
+      id: Date.now(),
+      concept: this.newTx.concept,
+      type: this.newTx.type,
+      amount: this.newTx.amount,
+      category: this.newTx.category,
+      date: new Date().toLocaleTimeString(),
+      method: 'Efectivo',
+      status: 'Procesado'
+    };
+    this.dataService.addTransaction(t);
+    this.closeTxModal();
+    this.newTx = { concept: '', amount: 0, type: 'Egreso', category: 'General' };
   }
 }

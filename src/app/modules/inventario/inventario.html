@@ -13,6 +13,7 @@
         📥 Entrada Stock
       </button>
       <button
+        (click)="openModal()"
         class="bg-indigo-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition"
       >
         + Registrar Bien
@@ -24,14 +25,14 @@
     <div class="bg-rose-50 border border-rose-100 p-6 rounded-[2rem] flex items-center gap-4">
       <div class="bg-rose-500 text-white p-4 rounded-2xl shadow-lg shadow-rose-200">🚨</div>
       <div>
-        <p class="text-rose-900 font-black text-2xl">2 Items</p>
+        <p class="text-rose-900 font-black text-2xl">{{ criticalStock }} Items</p>
         <p class="text-rose-600 text-xs font-bold uppercase tracking-widest">En Stock Crítico</p>
       </div>
     </div>
     <div class="bg-amber-50 border border-amber-100 p-6 rounded-[2rem] flex items-center gap-4">
       <div class="bg-amber-500 text-white p-4 rounded-2xl shadow-lg shadow-amber-200">⚠️</div>
       <div>
-        <p class="text-amber-900 font-black text-2xl">5 Items</p>
+        <p class="text-amber-900 font-black text-2xl">{{ lowStock }} Items</p>
         <p class="text-amber-600 text-xs font-bold uppercase tracking-widest">
           Próximos a agotarse
         </p>
@@ -40,7 +41,7 @@
     <div class="bg-emerald-50 border border-emerald-100 p-6 rounded-[2rem] flex items-center gap-4">
       <div class="bg-emerald-500 text-white p-4 rounded-2xl shadow-lg shadow-emerald-200">📦</div>
       <div>
-        <p class="text-emerald-900 font-black text-2xl">124</p>
+        <p class="text-emerald-900 font-black text-2xl">{{ totalItems }}</p>
         <p class="text-emerald-600 text-xs font-bold uppercase tracking-widest">Total de Activos</p>
       </div>
     </div>
@@ -54,8 +55,12 @@
         Kardex de Productos y Bienes
       </h3>
       <div class="flex gap-2">
-        <select class="bg-slate-50 border-none rounded-xl text-xs font-bold p-2 text-slate-500">
-          <option>Todas las categorías</option>
+        <select
+          [(ngModel)]="selectedCategory"
+          class="bg-slate-50 border-none rounded-xl text-xs font-bold p-2 text-slate-500 outline-none"
+        >
+          <option [value]="'Todas las categorías'">Todas las categorías</option>
+          <option *ngFor="let c of categorias" [value]="c">{{ c }}</option>
         </select>
       </div>
     </div>
@@ -68,14 +73,17 @@
             <th class="px-8 py-4">Categoría</th>
             <th class="px-8 py-4 text-center">Stock Actual</th>
             <th class="px-8 py-4 text-center">Estado</th>
-            <th class="px-8 py-4">Acciones</th>
+            <th class="px-8 py-4 text-right">Acciones</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-50">
-          <tr *ngFor="let item of items" class="hover:bg-slate-50/50 transition-colors group">
+          <tr
+            *ngFor="let item of filteredItems"
+            class="hover:bg-slate-50/50 transition-colors group"
+          >
             <td class="px-8 py-5">
               <p class="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
-                {{ item.name }}
+                {{ item.icon }} {{ item.name }}
               </p>
               <p class="text-[10px] text-slate-400 font-mono">SKU: VZ-00{{ item.id }}</p>
             </td>
@@ -86,7 +94,21 @@
               >
             </td>
             <td class="px-8 py-5 text-center">
-              <span class="text-lg font-black text-slate-700">{{ item.stock }}</span>
+              <div class="flex items-center justify-center gap-3">
+                <button
+                  (click)="updateStock(item, -1)"
+                  class="w-6 h-6 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold"
+                >
+                  -
+                </button>
+                <span class="text-lg font-black text-slate-700 min-w-[20px]">{{ item.stock }}</span>
+                <button
+                  (click)="updateStock(item, 1)"
+                  class="w-6 h-6 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold"
+                >
+                  +
+                </button>
+              </div>
             </td>
             <td class="px-8 py-5 text-center">
               <span
@@ -101,22 +123,105 @@
             <td class="px-8 py-5 text-right">
               <div class="flex items-center justify-end gap-2">
                 <button
-                  (click)="updateStock(item, 1)"
-                  class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 font-bold hover:bg-emerald-200 text-lg flex items-center justify-center"
+                  (click)="editItem(item)"
+                  class="text-slate-400 hover:text-indigo-600 transition-colors"
+                  title="Editar"
                 >
-                  +
+                  ✏️
                 </button>
                 <button
-                  (click)="updateStock(item, -1)"
-                  class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 font-bold hover:bg-rose-200 text-lg flex items-center justify-center"
+                  (click)="deleteItem(item)"
+                  class="text-slate-400 hover:text-rose-600 transition-colors"
+                  title="Eliminar"
                 >
-                  -
+                  🗑️
                 </button>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- MODAL PRODUCTO -->
+  <div
+    *ngIf="showModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn"
+  >
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6">
+      <h3 class="text-xl font-bold text-slate-800 mb-4">
+        {{ newItem.id ? 'Editar Producto' : 'Registrar Nuevo Bien' }}
+      </h3>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1"
+            >Nombre del Item</label
+          >
+          <input
+            type="text"
+            [(ngModel)]="newItem.name"
+            class="w-full border border-slate-200 rounded-lg p-3 outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Categoría</label>
+            <select
+              [(ngModel)]="newItem.category"
+              class="w-full border border-slate-200 rounded-lg p-3 outline-none focus:border-indigo-500"
+            >
+              <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1"
+              >Icono (Emoji)</label
+            >
+            <input
+              type="text"
+              [(ngModel)]="newItem.icon"
+              class="w-full border border-slate-200 rounded-lg p-3 outline-none focus:border-indigo-500 text-center"
+            />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1"
+              >Precio Unit.</label
+            >
+            <input
+              type="number"
+              [(ngModel)]="newItem.price"
+              class="w-full border border-slate-200 rounded-lg p-3 outline-none focus:border-indigo-500"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1"
+              >Stock Inicial</label
+            >
+            <input
+              type="number"
+              [(ngModel)]="newItem.stock"
+              class="w-full border border-slate-200 rounded-lg p-3 outline-none focus:border-indigo-500"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-6">
+        <button
+          (click)="closeModal()"
+          class="px-4 py-2 text-slate-500 font-bold hover:bg-slate-50 rounded-lg"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="saveItem()"
+          class="px-4 py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 shadow-lg shadow-indigo-200"
+        >
+          Guardar
+        </button>
+      </div>
     </div>
   </div>
 </div>

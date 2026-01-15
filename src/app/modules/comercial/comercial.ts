@@ -1,34 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DataService, Service } from '../../services/data.service';
 
 @Component({
   selector: 'app-comercial',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './comercial.html'
 })
-export class Comercial {
-  servicios = [
-    { 
-      titulo: 'Salón Imperial', 
-      capacidad: '500 personas', 
-      precio: 'S/ 3,500', 
-      imagen: '🏛️', 
-      tags: ['Aire Acondicionado', 'Sonido Pro'] 
-    },
-    { 
-      titulo: 'Jardín de Recepciones', 
-      capacidad: '300 personas', 
-      precio: 'S/ 2,800', 
-      imagen: '🌳', 
-      tags: ['Outdoor', 'Iluminación LED'] 
-    },
-    { 
-      titulo: 'Paquete Boda Todo Incluido', 
-      capacidad: 'Personalizado', 
-      precio: 'Desde S/ 8,000', 
-      imagen: '💍', 
-      tags: ['Catering', 'Decoración', 'DJ'] 
-    }
-  ];
+export class Comercial implements OnInit {
+  servicios: Service[] = [];
+  showModal = false;
+  editingService: Service = { id: 0, titulo: '', capacidad: '', precio: 0, imagen: '', tags: [] };
+
+  constructor(private dataService: DataService) { }
+
+  ngOnInit() {
+    this.dataService.services$.subscribe(data => {
+      this.servicios = data;
+    });
+  }
+
+  editService(s: Service) {
+    this.editingService = { ...s }; // Clone
+    this.showModal = true;
+  }
+
+  saveService() {
+    this.dataService.updateService(this.editingService);
+    this.showModal = false;
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
 }

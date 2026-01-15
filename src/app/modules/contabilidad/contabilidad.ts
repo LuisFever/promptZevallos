@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DataService, Transaction } from '../../services/data.service';
 
 @Component({
   selector: 'app-contabilidad',
@@ -8,43 +9,57 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
   templateUrl: './contabilidad.html'
 })
-export class Contabilidad {
+export class Contabilidad implements OnInit {
   selectedEvent = 'Global';
-
   eventos = [
     { id: 'Global', nombre: 'Reporte Anual Consolidado' },
     { id: 'ev1', nombre: 'Boda Familia Flores' },
     { id: 'ev2', nombre: 'Conferencia Tech' }
   ];
 
-  // Datos Simulados
-  private dataGlobal = {
-    ingreso: 145280, inversion: 42100, margen: 68.4,
-    reportes: [
-      { mes: 'Ene', ingresos: 15000, color: 'h-[60%]' },
-      { mes: 'Feb', ingresos: 18000, color: 'h-[75%]' },
-      { mes: 'Mar', ingresos: 12000, color: 'h-[50%]' },
-      { mes: 'Abr', ingresos: 22000, color: 'h-[95%]' }
-    ]
-  };
+  transactions: Transaction[] = [];
 
-  private dataEvento1 = {
-    ingreso: 12000, inversion: 4500, margen: 62.5,
-    reportes: [
-      { mes: 'Reserva', ingresos: 6000, color: 'h-[50%]' },
-      { mes: 'Final', ingresos: 6000, color: 'h-[50%]' }
-    ]
-  };
+  constructor(private dataService: DataService) { }
 
-  get stats() {
-    if (this.selectedEvent === 'ev1') return this.dataEvento1;
-    // Default Global
-    return this.dataGlobal;
+  ngOnInit() {
+    this.dataService.transactions$.subscribe(data => {
+      this.transactions = data;
+    });
   }
 
-  topServicios = [
-    { nombre: 'Alquiler Salón Imperial', ventas: 24, tendencia: 'up' },
-    { nombre: 'Servicio de Catering', ventas: 18, tendencia: 'up' },
-    { nombre: 'Derecho de Corcho', ventas: 45, tendencia: 'down' }
+  get stats() {
+    // Filter by event if needed (For now, 'Global' uses all, specific events could filter by Concept string matches)
+    // Simplified logic: Global = All Data.
+
+    const ingreso = this.transactions
+      .filter(t => t.type === 'Ingreso')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const inversion = this.transactions
+      .filter(t => t.type === 'Egreso')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const margen = ingreso > 0 ? ((ingreso - inversion) / ingreso) * 100 : 0;
+
+    return {
+      ingreso,
+      inversion,
+      margen: margen.toFixed(1),
+      reportes: [
+        { mes: 'Ene', ingresos: 15000, color: 'h-[60%]' },
+        { mes: 'Feb', ingresos: 18000, color: 'h-[75%]' },
+        // ... simple mock chart data for now
+      ]
+    };
+  }
+
+  topServicios: any[] = [
+    { nombre: 'Alquiler Salón Imperial', ventas: 24, tendencia: 'up', total: 12000 },
+    { nombre: 'Servicio de Catering', ventas: 18, tendencia: 'up', total: 8500 },
+    { nombre: 'Derecho de Corcho', ventas: 45, tendencia: 'down', total: 2000 }
   ];
+
+  downloadReport() {
+    window.print();
+  }
 }
