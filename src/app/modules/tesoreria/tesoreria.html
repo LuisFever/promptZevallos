@@ -82,34 +82,34 @@
           <tr *ngFor="let m of movimientos" class="hover:bg-slate-50/50 transition-all group">
             <td class="px-8 py-5">
               <p class="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
-                {{ m.concepto }}
+                {{ m.concept }}
               </p>
               <p class="text-[10px] text-slate-400 font-medium tracking-tight italic">
-                {{ m.fecha }}
+                {{ m.date }}
               </p>
             </td>
             <td class="px-8 py-5">
               <span
                 [ngClass]="{
-                  'bg-amber-100 text-amber-700': m.categoria.includes('Planilla'),
-                  'bg-indigo-100 text-indigo-700': m.categoria.includes('Sueldos'),
-                  'bg-slate-100 text-slate-500': m.categoria === 'Ventas'
+                  'bg-amber-100 text-amber-700': m.category.includes('Planilla'),
+                  'bg-indigo-100 text-indigo-700': m.category.includes('Sueldos'),
+                  'bg-slate-100 text-slate-500': m.category === 'Ventas'
                 }"
                 class="px-3 py-1 rounded-full text-[9px] font-black uppercase"
               >
-                {{ m.categoria }}
+                {{ m.category }}
               </span>
             </td>
             <td class="px-8 py-5 text-center">
               <div class="flex items-center justify-center gap-2">
-                <span class="text-xs font-bold text-slate-600">{{ m.metodo }}</span>
+                <span class="text-xs font-bold text-slate-600">{{ m.method }}</span>
               </div>
             </td>
             <td
               class="px-8 py-5 text-right font-black"
-              [ngClass]="m.tipo === 'Ingreso' ? 'text-emerald-600' : 'text-rose-500'"
+              [ngClass]="m.type === 'Ingreso' ? 'text-emerald-600' : 'text-rose-500'"
             >
-              {{ m.tipo === 'Egreso' ? '-' : '+' }} S/ {{ m.monto | number : '1.2-2' }}
+              {{ m.type === 'Egreso' ? '-' : '+' }} S/ {{ m.amount | number : '1.2-2' }}
             </td>
             <td class="px-8 py-5">
               <span class="flex items-center gap-1 text-[10px] font-bold text-emerald-500">

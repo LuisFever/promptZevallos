@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DataService } from '../../services/data.service';
+import { DataService } from '../../../services/data.service';
 
 @Component({
     selector: 'app-booking',
@@ -14,11 +14,13 @@ import { DataService } from '../../services/data.service';
 export class BookingComponent {
     steps = ['Fecha', 'Evento', 'Datos'];
     currentStep = 1;
+    showSuccessModal = false;
 
     dates = Array.from({ length: 31 }, (_, i) => i + 1); // Mock calendar days
 
     // Form Model
     formData = {
+        date: null as number | null,
         name: '',
         lastname: '',
         email: '',
@@ -32,7 +34,7 @@ export class BookingComponent {
         // Simular Reserva
         this.dataService.addTransaction({
             id: Date.now(),
-            concept: `Reserva Web - ${this.formData.name} ${this.formData.lastname}`,
+            concept: `Reserva Web (Día ${this.formData.date}) - ${this.formData.name} ${this.formData.lastname}`,
             type: 'Ingreso',
             amount: 0, // Pendiente de cotización
             category: 'Reservas',
@@ -41,7 +43,11 @@ export class BookingComponent {
             status: 'Pendiente'
         });
 
-        alert('¡Solicitud enviada con éxito! Nos contactaremos pronto.');
+        this.showSuccessModal = true;
+    }
+
+    closeModal() {
+        this.showSuccessModal = false;
         this.router.navigate(['/']);
     }
 }

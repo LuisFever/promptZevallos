@@ -17,6 +17,7 @@ export interface Product {
     price: number;
     stock: number;
     image?: string;
+    icon?: string;
 }
 
 export interface Transaction {
@@ -74,11 +75,11 @@ export class DataService {
         } else {
             // Default Products
             const defaults: Product[] = [
-                { id: 1, name: 'Coca Cola 500ml', category: 'Bebidas', price: 5.00, stock: 150 },
-                { id: 2, name: 'Inca Kola 500ml', category: 'Bebidas', price: 5.00, stock: 140 },
-                { id: 3, name: 'Cerveza Pilsen', category: 'Licores', price: 12.00, stock: 80 },
-                { id: 4, name: 'Agua Mineral', category: 'Bebidas', price: 3.00, stock: 200 },
-                { id: 5, name: 'Piqueo Snaks', category: 'Alimentos', price: 8.00, stock: 50 },
+                { id: 1, name: 'Coca Cola 500ml', category: 'Bebidas', price: 5.00, stock: 150, icon: '🥤' },
+                { id: 2, name: 'Inca Kola 500ml', category: 'Bebidas', price: 5.00, stock: 140, icon: '🥤' },
+                { id: 3, name: 'Cerveza Pilsen', category: 'Licores', price: 12.00, stock: 80, icon: '🍺' },
+                { id: 4, name: 'Agua Mineral', category: 'Bebidas', price: 3.00, stock: 200, icon: '💧' },
+                { id: 5, name: 'Piqueo Snaks', category: 'Alimentos', price: 8.00, stock: 50, icon: '🍟' },
             ];
             this.productsSubject.next(defaults);
             this.saveProducts(defaults);
